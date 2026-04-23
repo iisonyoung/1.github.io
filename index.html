@@ -5,7 +5,7 @@
     <!-- ═══════════════════════════════════════════
        VIEWPORT — 禁止用户缩放，适配刘海/灵动岛，处理虚拟键盘挤压
     ═══════════════════════════════════════════ -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     
     <title>App Name</title>
     
@@ -65,8 +65,6 @@
         html {
             width: 100vw;
             height: 100%;
-            /* 解决 iOS PWA 底部留有 Safari 地址栏大小白边的问题 */
-            height: -webkit-fill-available;
             max-width: 100%;
             overscroll-behavior: none;
             overflow: hidden;
@@ -80,7 +78,6 @@
         body {
             width: 100vw;
             height: 100%;
-            height: -webkit-fill-available;
             max-width: 100%;
             background-color: #ffffff; /* 兜底背景改为白色，防止漏黑块 */
             overscroll-behavior: none;
@@ -101,7 +98,6 @@
             right: 0;
             bottom: 0;
             height: 100%;
-            height: -webkit-fill-available;
             overflow: hidden;
             display: flex;
             flex-direction: column;
