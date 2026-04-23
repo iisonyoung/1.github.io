@@ -65,6 +65,8 @@
         html {
             width: 100vw;
             height: 100%;
+            /* 解决 iOS PWA 底部留有 Safari 地址栏大小白边的问题 */
+            height: -webkit-fill-available;
             max-width: 100%;
             overscroll-behavior: none;
             overflow: hidden;
@@ -78,6 +80,7 @@
         body {
             width: 100vw;
             height: 100%;
+            height: -webkit-fill-available;
             max-width: 100%;
             background-color: #ffffff; /* 兜底背景改为白色，防止漏黑块 */
             overscroll-behavior: none;
@@ -97,6 +100,8 @@
             left: 0;
             right: 0;
             bottom: 0;
+            height: 100%;
+            height: -webkit-fill-available;
             overflow: hidden;
             display: flex;
             flex-direction: column;

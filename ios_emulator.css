@@ -61,6 +61,7 @@ html, body {
     -webkit-font-smoothing: antialiased;
     width: 100vw;
     height: 100%;
+    height: -webkit-fill-available;
     max-width: 100%;
     position: fixed;
     top: 0;
