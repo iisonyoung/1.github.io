@@ -421,7 +421,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: calc(18px + var(--keyboard-height, 0px));
+    bottom: 18px;
     display: flex;
     justify-content: center;
     z-index: 200;

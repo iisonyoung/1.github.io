@@ -1029,7 +1029,6 @@ function closeContextMenu() {
             // Adjust if it goes off screen
             const viewportWidth = Math.max(
                 0,
-                Number.parseFloat(document.documentElement.style.getPropertyValue('--viewport-width')) ||
                 window.visualViewport?.width ||
                 document.documentElement.clientWidth ||
                 window.innerWidth ||
@@ -1037,7 +1036,6 @@ function closeContextMenu() {
             );
             const viewportHeight = Math.max(
                 0,
-                Number.parseFloat(document.documentElement.style.getPropertyValue('--viewport-height')) ||
                 window.visualViewport?.height ||
                 document.documentElement.clientHeight ||
                 window.innerHeight ||

@@ -359,18 +359,8 @@ function renderModelList() {
     UI.lists.models.appendChild(fragment);
 }
 
-if (typeof window.scheduleViewportSync === 'function') {
-    window.scheduleViewportSync();
-} else if (typeof window.syncViewportMetrics === 'function') {
-    window.syncViewportMetrics();
-}
-
 window.addEventListener('orientationchange', () => {
-    if (typeof window.scheduleViewportSync === 'function') {
-        window.scheduleViewportSync();
-    } else if (typeof window.syncViewportMetrics === 'function') {
-        window.syncViewportMetrics();
-    }
+    // Left intentionally blank as old PWA sync logic is removed
 });
 
 const THEME_FONT_PREVIEW_TEXT = 'Aa 你好 Hello 123';
@@ -1256,12 +1246,6 @@ function applyAppIconStyles(app) {
 
 // Apply theme on load
 function applySavedTheme() {
-    if (typeof window.scheduleViewportSync === 'function') {
-        window.scheduleViewportSync();
-    } else if (typeof window.syncViewportMetrics === 'function') {
-        window.syncViewportMetrics();
-    }
-
     applyThemeBackground(themeState);
     applyThemeFont(themeState);
     applyThemeAppIcons(themeState);

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <!-- ═══════════════════════════════════════════
-       VIEWPORT — 禁止用户缩放，适配刘海/灵动岛，处理虚拟键盘挤压
+       VIEWPORT — 禁止用户缩放
     ═══════════════════════════════════════════ -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     
@@ -13,7 +13,6 @@
          iOS PWA 全屏 (Add to Home Screen)
     ═══════════════════════════════════════════ -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <!-- black-translucent = 状态栏透明叠在内容上，实现真全屏 -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="App Name" />
     
@@ -21,10 +20,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png" />
     <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png" />
     <link rel="apple-touch-icon" sizes="120x120" href="icons/icon-120.png" />
-    
-    <!-- iOS 启动画面 -->
-    <!-- 移除零散的 apple-touch-startup-image 以防止由于分辨率不匹配而导致在某些 iPhone 上退回带上下黑边的兼容模式 -->
-    
+        
     <!-- ═══════════════════════════════════════════
          Android PWA / 主题色
     ═══════════════════════════════════════════ -->
@@ -45,357 +41,6 @@
     <link rel="stylesheet" href="bstage.css?v=1.0.0">
     <link rel="stylesheet" href="x_app.css?v=1.0.0">
     <link rel="stylesheet" href="loves.css?v=1.0.2">
-    <style>
-        /* ─── PWA & 全屏适配样式 ───────────────────── */
-        :root {
-            --safe-top: env(safe-area-inset-top, 0px);
-            --safe-right: env(safe-area-inset-right, 0px);
-            --safe-bottom: env(safe-area-inset-bottom, 0px);
-            --safe-left: env(safe-area-inset-left, 0px);
-        }
-        
-        /* 全局盒模型与 Reset：解决 margin 和 padding 造成的 iOS 溢出与黑块 */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html {
-            width: 100vw;
-            height: 100%;
-            max-width: 100%;
-            overscroll-behavior: none;
-            overflow: hidden;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
-
-        body {
-            width: 100vw;
-            height: 100%;
-            max-width: 100%;
-            background-color: #ffffff; /* 兜底背景改为白色，防止漏黑块 */
-            overscroll-behavior: none;
-            -webkit-user-select: none;
-            user-select: none;
-            overflow: hidden;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
-
-        #app {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            height: 100%;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--screen-bg, #ffffff);
-            background-image: var(--home-bg-image, none);
-            background-size: cover;
-            background-position: center;
-        }
-
-        #diary-view,
-        #ao3-view,
-        #maps-view,
-        #ao3-category-modal,
-        #ao3-book-detail-modal,
-        #ao3-author-view,
-        #ao3-preface-view,
-        #ao3-reader-view,
-        #maps-settings-sheet,
-        #maps-friend-popover-overlay,
-        #maps-place-popover-overlay,
-        #maps-map-switcher-overlay {
-            display: none;
-        }
-
-        .settings-usage-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 96px;
-            max-width: 190px;
-            min-height: 28px;
-            padding: 0 10px;
-            border-radius: 999px;
-            background: #f2f2f7;
-            color: #8e8e93;
-            font-size: 12px;
-            font-weight: 600;
-            line-height: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-right: 6px;
-        }
-
-        #diary-view.active,
-        #ao3-view.active,
-        #maps-view.active,
-        #ao3-category-modal.active,
-        #ao3-book-detail-modal.active,
-        #ao3-author-view.active,
-        #ao3-preface-view.active,
-        #ao3-reader-view.active,
-        #maps-settings-sheet.active,
-        #maps-friend-popover-overlay.active,
-        #maps-place-popover-overlay.active,
-        #maps-map-switcher-overlay.active {
-            display: flex;
-        }
-
-        .theme-font-group-body {
-            padding: 14px 16px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .theme-font-preview-bubble {
-            display: inline-flex;
-            align-items: center;
-            max-width: 100%;
-            padding: 10px 14px;
-            border-radius: 18px;
-            background: #f2f2f7;
-            color: #111111;
-            font-size: 16px;
-            line-height: 1.4;
-            box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.04);
-            word-break: break-word;
-        }
-
-        .theme-font-preview-caption {
-            font-size: 12px;
-            color: #8e8e93;
-            line-height: 1.4;
-        }
-
-        .theme-font-preset-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .theme-font-pill {
-            border: 1px solid transparent;
-            background: #f2f2f7;
-            color: #111111;
-            border-radius: 999px;
-            padding: 0;
-            font-size: 13px;
-            font-weight: 600;
-            line-height: 1;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .theme-font-pill-label {
-            padding: 8px 12px;
-            display: inline-flex;
-            align-items: center;
-            min-height: 32px;
-        }
-
-        .theme-font-pill-delete {
-            width: 28px;
-            height: 28px;
-            border: none;
-            background: transparent;
-            color: inherit;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            margin-right: 4px;
-            border-radius: 999px;
-            opacity: 0.78;
-        }
-
-        .theme-font-pill-delete:hover {
-            background: rgba(17, 17, 17, 0.08);
-            opacity: 1;
-        }
-
-        .theme-font-pill.active {
-            background: #111111;
-            color: #ffffff;
-        }
-
-        .theme-font-pill.active .theme-font-pill-delete:hover {
-            background: rgba(255, 255, 255, 0.16);
-        }
-
-        .theme-font-modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 10010;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            background: rgba(0, 0, 0, 0.28);
-        }
-
-        .theme-font-modal-overlay.active {
-            display: flex;
-        }
-
-        .theme-font-modal-card {
-            width: min(360px, 100%);
-            max-height: min(78vh, 620px);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 24px;
-            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
-        }
-
-        .theme-font-modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            padding: 18px 20px 12px;
-        }
-
-        .theme-font-modal-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #111111;
-        }
-
-        .theme-font-modal-icon-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .theme-font-modal-icon-btn {
-            width: 34px;
-            height: 34px;
-            border: none;
-            border-radius: 50%;
-            background: #f2f2f7;
-            color: #111111;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .theme-font-modal-icon-btn.is-danger {
-            background: #ffebee;
-            color: #ff3b30;
-        }
-
-        .theme-font-modal-body {
-            padding: 0 20px 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .theme-font-section-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: #8e8e93;
-            margin-bottom: 10px;
-        }
-
-        .theme-font-link-tip {
-            font-size: 12px;
-            color: #8e8e93;
-            line-height: 1.5;
-            margin-top: -4px;
-        }
-
-        .theme-font-subsection {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .theme-font-size-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .theme-font-size-slider {
-            flex: 1;
-            accent-color: #111111;
-        }
-
-        .theme-font-size-value {
-            min-width: 44px;
-            text-align: right;
-            font-size: 13px;
-            font-weight: 600;
-            color: #8e8e93;
-        }
-
-        /* 生成设置专门的迷你原生开关 */
-        .gen-mini-toggle {
-            position: relative;
-            display: inline-block;
-            width: 46px;
-            height: 28px;
-            flex-shrink: 0;
-        }
-        .gen-mini-toggle input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .gen-mini-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #e5e5ea;
-            transition: .4s;
-            border-radius: 28px;
-        }
-        .gen-mini-slider:before {
-            position: absolute;
-            content: "";
-            height: 24px;
-            width: 24px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: .3s cubic-bezier(0.4, 0.0, 0.2, 1);
-            border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        .gen-mini-toggle input:checked + .gen-mini-slider {
-            background-color: #34c759;
-        }
-        .gen-mini-toggle input:checked + .gen-mini-slider:before {
-            transform: translateX(18px);
-        }
-    </style>
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -4846,7 +4491,7 @@
                 </div>
 
                 <!-- Input Area (TikTok Style) -->
-                <div class="tk-dm-input-area" style="padding: 10px 15px 15px; background: #fff; border-top: 1px solid #f0f0f0; display: flex; align-items: center; gap: 10px; position: absolute; bottom: 0; left: 0; width: 100%; box-sizing: border-box; z-index: 100; transform: translateY(calc(var(--keyboard-height, 0px) * -1));">
+                <div class="tk-dm-input-area" style="padding: 10px 15px 15px; background: #fff; border-top: 1px solid #f0f0f0; display: flex; align-items: center; gap: 10px; position: absolute; bottom: 0; left: 0; width: 100%; box-sizing: border-box; z-index: 100;">
                     <div style="width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #111; font-size: 20px; cursor: pointer;"><i class="fas fa-camera"></i></div>
                     <div style="flex: 1; display: flex; align-items: center; background: #f1f1f2; border-radius: 20px; padding: 5px 15px; position: relative;">
                         <input type="text" id="tk-dm-chat-input" placeholder="发送消息..." style="flex: 1; background: transparent; border: none; padding: 8px 0; font-size: 15px; outline: none; color: #111;">
@@ -6050,50 +5695,6 @@
                             </div>
                         </div>
 
-                        <style>
-                            .custom-minimal-tabs {
-                                display: flex;
-                                justify-content: space-around;
-                                padding: 0 40px;
-                                margin-top: 15px;
-                                margin-bottom: 15px;
-                            }
-                            .custom-minimal-tabs button.char-settings-tab {
-                                background: none !important;
-                                border: none !important;
-                                box-shadow: none !important;
-                                border-radius: 0 !important;
-                                padding: 10px 20px;
-                                font-size: 16px;
-                                font-weight: 600;
-                                color: #ccc;
-                                cursor: pointer;
-                                position: relative;
-                                outline: none;
-                                transition: color 0.2s;
-                                flex: none !important;
-                            }
-                            .custom-minimal-tabs button.char-settings-tab.active {
-                                color: #000;
-                                background: none !important;
-                                box-shadow: none !important;
-                            }
-                            .custom-minimal-tabs button.char-settings-tab::after {
-                                content: '';
-                                position: absolute;
-                                bottom: 0;
-                                left: 50%;
-                                transform: translateX(-50%);
-                                width: 0;
-                                height: 3px;
-                                background-color: #000;
-                                border-radius: 3px;
-                                transition: width 0.2s ease;
-                            }
-                            .custom-minimal-tabs button.char-settings-tab.active::after {
-                                width: 80%;
-                            }
-                        </style>
                         <div class="custom-minimal-tabs" id="chat-settings-segment">
                             <button type="button" class="char-settings-tab active" data-tab="info">Info</button>
                             <button type="button" class="char-settings-tab" data-tab="memory">Memory</button>
@@ -6982,33 +6583,7 @@
         </div> <!-- Closing #app -->
 
     <!-- PWA / Fullscreen Support Scripts -->
-    <script>
-    (function() {
-        /* 防止 iOS Safari 橡皮筋弹动 (仅限制 body 的 touchmove 以免影响应用内部滚动) */
-        document.addEventListener('touchmove', function(e) {
-            if (e.target === document.body || e.target === document.documentElement || e.target.id === 'app') {
-                e.preventDefault();
-            }
-        }, { passive: false });
-
-        /* 禁止双击缩放（iOS 旧版兼容） */
-        let lastTap = 0;
-        document.addEventListener('touchend', function(e) {
-            const now = Date.now();
-            if (now - lastTap < 300) { e.preventDefault(); }
-            lastTap = now;
-        }, { passive: false });
-
-        /* iOS 15+ 地址栏高度补偿 */
-        function setRealVh() {
-            const vh = (window.visualViewport?.height ?? window.innerHeight) * 0.01;
-            document.documentElement.style.setProperty('--real-vh', `${vh}px`);
-        }
-        setRealVh();
-        window.visualViewport?.addEventListener('resize', setRealVh);
-        window.addEventListener('resize', setRealVh);
-    })();
-    </script>
+    <script src="pwa_setup.js"></script>
 
     <!-- Core Scripts -->
     <script src="storage/app_storage.js"></script>
