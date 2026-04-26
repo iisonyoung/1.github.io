@@ -46,6 +46,8 @@
     display: flex;
     flex-direction: column;
     background-color: #fafafa;
+    padding-bottom: calc(20px + var(--safe-bottom));
+    -webkit-overflow-scrolling: touch;
 }
 
 /* 顶部朋友滚动栏 (仿 ins story) */

@@ -4,7 +4,7 @@
 
 /* Main View Container */
 .tiktok-view {
-    --tk-safe-top: env(safe-area-inset-top, 0px);
+    --tk-safe-top: var(--safe-top);
     --tk-header-height: 44px;
     --tk-top-offset: calc(var(--tk-safe-top) + var(--tk-header-height));
     position: absolute;
@@ -61,7 +61,7 @@
 /* --- BOTTOM NAV (Floating & Low Saturation) --- */
 .tk-bottom-nav-container {
     position: absolute;
-    bottom: 12px;
+    bottom: calc(12px + var(--safe-bottom));
     left: 0;
     width: 100%;
     display: flex;
@@ -186,6 +186,7 @@
     overflow-y: scroll;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
     padding-top: var(--tk-top-offset);
@@ -261,7 +262,7 @@
 .tk-right-actions {
     position: absolute;
     right: 12px;
-    bottom: 130px; /* Moved up */
+    bottom: calc(130px + var(--safe-bottom)); /* Moved up */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -372,7 +373,7 @@
 /* Bottom Info */
 .tk-bottom-info {
     position: absolute;
-    bottom: 90px;
+    bottom: calc(90px + var(--safe-bottom));
     left: 15px;
     width: calc(100% - 80px);
     z-index: 5;
@@ -507,9 +508,10 @@
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-    padding-bottom: 100px;
+    padding-bottom: calc(100px + var(--safe-bottom));
     padding-top: 8px;
     box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Following Bar (Avatars with bubbles) */
@@ -692,9 +694,10 @@
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-    padding-bottom: 100px;
+    padding-bottom: calc(100px + var(--safe-bottom));
     padding-top: 8px;
     box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
 }
 
 .tk-profile-avatar-section {
@@ -1036,6 +1039,7 @@
 /* Override default bottom sheet styles for TikTok if needed */
 #tk-video-detail-sheet .bottom-sheet {
     background-color: #ffffff;
+    padding-bottom: calc(10px + var(--safe-bottom));
 }
 #tk-video-detail-sheet .sheet-title {
     font-size: 14px;

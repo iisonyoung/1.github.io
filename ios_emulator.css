@@ -85,7 +85,8 @@ body {
 
 #app {
     width: 100%;
-    height: 100%;
+    /* 使用 real-vh 变量，fallback 为 100vh */
+    height: calc(var(--real-vh, 1vh) * 100);
     position: relative;
     overflow: hidden;
     display: flex;
@@ -113,7 +114,6 @@ body {
     user-select: none;
     -webkit-touch-callout: none;
     touch-action: pan-x;
-    padding-bottom: 0 !important;
 }
 .pages-container::-webkit-scrollbar {
     display: none;
@@ -126,9 +126,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: 0 !important;
-    /* Removed padding-bottom: 170px; to prevent pushing the screen up and causing blank space below */
+    padding-top: var(--safe-top);
 }
 
 /* Page Indicators */
@@ -1349,7 +1347,7 @@ body.jiggle-mode {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 20px;
+    bottom: calc(20px + var(--safe-bottom));
     padding: 0;
     margin: 0;
     width: 100%;
@@ -1753,7 +1751,7 @@ body.jiggle-mode {
     z-index: 150;
     display: flex;
     flex-direction: column;
-    padding-top: 44px;
+    padding-top: 0; /* Changed from 44px to 0 for flex layout */
     transform: translateX(100%);
     transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
     min-height: 0;
@@ -1775,12 +1773,13 @@ body.jiggle-mode {
 
 /* Big Header for Main Settings */
 .big-header {
-    padding: 50px 16px 10px; 
+    padding: calc(50px + var(--safe-top)) 16px 10px; 
     display: flex;
     flex-direction: column;
     background-color: var(--settings-bg);
     z-index: 10;
     cursor: pointer;
+    flex-shrink: 0;
 }
 
 .big-header .header-btn {
@@ -2230,7 +2229,7 @@ body.jiggle-mode {
     -webkit-backdrop-filter: blur(30px);
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
-    padding: 10px 16px 40px;
+    padding: 10px 16px calc(40px + var(--safe-bottom));
     transform: translateY(100%);
     transition: transform 0.35s cubic-bezier(0.17, 0.84, 0.44, 1); /* Nice spring-like feel */
     max-height: 85%;

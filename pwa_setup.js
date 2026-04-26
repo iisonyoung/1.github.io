@@ -28,6 +28,7 @@
     setRealVh();
     window.visualViewport?.addEventListener('resize', setRealVh);
     window.addEventListener('resize', setRealVh);
+    window.addEventListener('orientationchange', setRealVh);
 
     /* 判断当前是否已经在全屏模式运行（用户已添加到主屏幕并从中打开）*/
     function isStandalone() {
@@ -38,15 +39,11 @@
         if (isStandalone()) {
             console.log("App is running in Standalone (Fullscreen) mode.");
             // 在全屏模式下，你可以根据需要做一些特殊的 UI 调整
+            document.body.classList.add('is-standalone');
         } else {
             console.log("App is running in Browser mode.");
             // 可以提示用户将其添加到主屏幕
         }
-
-        // 优化完后清理所有旧数据
-        localStorage.clear();
-        sessionStorage.clear();
-        console.log("All old data cleared.");
     });
 
 })();
